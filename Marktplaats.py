@@ -24,6 +24,8 @@ while True:
 
     found_new_results = False
 
+    # Verzamelt alle informatie over de resultaten en slaat deze gezamenlijk op in "results"
+
     titles = html.find_all("h3", {"class": "mp-Listing-title"})
     descriptions = html.find_all("p", {"class": "mp-Listing-description mp-text-paragraph"})
     sellers = html.find_all("span", {"class": "mp-Listing-seller-name"})
@@ -32,7 +34,11 @@ while True:
     results = zip([i.text for i in titles], [i.text for i in descriptions],[i.text for i in sellers],
                   [i.text for i in prices])
 
+    # De verzamelde resultaten binnen deze dataverzameling
+
     current_results = [result for result in set(results)]
+
+
     new_results = []
 
     for result in current_results:
@@ -45,17 +51,21 @@ while True:
     if len(new_results) > 0:
         found_new_results = True
 
+    # Geeft de tijd van de verzameling van resultaten weer
+
     now = datetime.now()
 
     current_time = now.strftime("%H:%M:%S")
     print("Current Time =", current_time)
+
+    # Geeft alle nieuwe resultaten weer
 
     print("New results: ")
     for result in new_results:
         print("Titel: " + result[0] + "\n", "Beschrijving: " + result[1] + "\n", "Verkoper: " + result[2] + "\n",
               "Prijs: " + result[3] + "\n")
 
-    # Play a sound when new results are found
+    # Speelt een geluid af als er nieuwe resultaten zijn
     if found_new_results:
         playsound('ding.wav')
 
