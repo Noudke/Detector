@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 import requests
 from bs4 import BeautifulSoup
 from playsound import playsound
+import urllib.parse
 
 
 waiting_time_list = [i for i in range(200, 300)]
@@ -32,9 +33,15 @@ while True:
         descriptions = html.find_all("p", {"class": "mp-Listing-description mp-text-paragraph"})
         sellers = html.find_all("span", {"class": "mp-Listing-seller-name"})
         prices = html.find_all("span", {"class": "mp-Listing-price mp-text-price-label"})
+        links = html.find_all("a", {"class": "mp-Listing-coverLink"})
+
+        # Formatteren van de links om klikbaar te zijn
+
+        for link in range(len(links)):
+            links[link] = "http://marktplaats.nl/v" + links[link].get('href')[2:]
 
         results = zip([i.text for i in titles], [i.text for i in descriptions],[i.text for i in sellers],
-                      [i.text for i in prices])
+                      [i.text for i in prices], [i for i in links])
 
         # De verzamelde resultaten binnen deze dataverzameling
 
@@ -62,10 +69,10 @@ while True:
 
         # Geeft alle nieuwe resultaten weer
 
-        print("New results: ")
+        print("Nieuwe resultaten: " + str(len(new_results)) + "\n")
         for result in new_results:
             print("Titel: " + result[0] + "\n", "Beschrijving: " + result[1] + "\n", "Verkoper: " + result[2] + "\n",
-                  "Prijs: " + result[3] + "\n")
+                  "Prijs: " + result[3] + "\n", "Link: " + result[4] + "\n")
 
         # Speelt een geluid af als er nieuwe resultaten zijn
         if found_new_results:
